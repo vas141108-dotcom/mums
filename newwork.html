@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mum's 44th & Fabulous Birthday Dreamhouse 💖</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --barbie-pink: #ff1493;
+      --barbie-hot-pink: #e0007b;
+      --barbie-soft-pink: #fff0f6;
+      --barbie-light-pink: #ffb6c1;
+      --barbie-gold: #ffd700;
+      --barbie-dark: #2c001e;
+      --glass-bg: rgba(255, 255, 255, 0.85);
+      --card-shadow: 0 15px 35px rgba(255, 20, 147, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd1dc 100%);
+      color: var(--barbie-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #sprinkle-canvas {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999;
+    }
+
+    header {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--barbie-light-pink);
+      position: sticky; top: 0; z-index: 100;
+      padding: 1rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 4px 20px rgba(255, 20, 147, 0.08);
+      flex-wrap: wrap; gap: 1rem;
+    }
+
+    .brand {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.2rem; color: var(--barbie-pink); font-weight: 700;
+    }
+
+    .nav-tabs { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+
+    .tab-btn {
+      background: transparent; border: 2px solid var(--barbie-pink); color: var(--barbie-pink);
+      padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: 700; cursor: pointer;
+      transition: all 0.3s ease; display: flex; align-items: center; gap: 0.4rem; font-size: 0.95rem;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--barbie-pink); color: white;
+      box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4); transform: translateY(-2px);
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .tab-content { display: none; animation: fadeIn 0.5s ease; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      text-align: center; padding: 3rem 1rem;
+      background: rgba(255, 255, 255, 0.6); border-radius: 30px;
+      border: 2px solid white; box-shadow: var(--card-shadow); margin-bottom: 3rem;
+    }
+
+    .hero-badge {
+      display: inline-block; background: var(--barbie-pink); color: white;
+      padding: 0.5rem 1.5rem; border-radius: 50px; font-weight: 800;
+      font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem;
+    }
+
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--barbie-hot-pink); margin-bottom: 0.5rem; }
+    .hero p { font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto 2rem; }
+
+    .bouquet-wrapper { display: inline-block; cursor: pointer; margin: 1.5rem 0; user-select: none; }
+    .bouquet-svg {
+      width: 180px; height: 180px; filter: drop-shadow(0 10px 15px rgba(255, 20, 147, 0.3));
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .bouquet-wrapper:hover .bouquet-svg { animation: shake 0.5s infinite alternate; }
+
+    @keyframes shake {
+      0% { transform: rotate(-6deg) scale(1.05); }
+      100% { transform: rotate(6deg) scale(1.05); }
+    }
+
+    .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.4rem; color: var(--barbie-dark); margin-bottom: 2rem; }
+
+    .comparison-container { max-width: 750px; margin: 0 auto 4rem; background: white; padding: 1.5rem; border-radius: 25px; box-shadow: var(--card-shadow); }
+    .comparison-slider { position: relative; width: 100%; height: 450px; overflow: hidden; border-radius: 18px; cursor: ew-resize; }
+    .comparison-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+    .img-overlay { width: 50%; z-index: 2; border-right: 4px solid var(--barbie-pink); }
+    .slider-handle { position: absolute; top: 0; left: 50%; width: 4px; height: 100%; background: var(--barbie-pink); z-index: 3; transform: translateX(-50%); }
+    .slider-button { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 48px; height: 48px; background: var(--barbie-pink); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+    .upload-controls { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--barbie-pink); color: white; border: none; padding: 0.8rem 1.6rem;
+      border-radius: 50px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+      transition: all 0.3s; display: inline-flex; align-items: center; gap: 0.5s;
+    }
+    .btn-primary:hover { background: var(--barbie-hot-pink); transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: var(--barbie-soft-pink); color: var(--barbie-pink); border: 1px solid var(--barbie-light-pink);
+      padding: 0.6rem 1.2rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
+    }
+    .btn-secondary:hover { background: var(--barbie-light-pink); color: white; }
+
+    /* Photobooth Styling */
+    .photobooth-container { max-width: 800px; margin: 0 auto; background: white; padding: 2.5rem; border-radius: 30px; box-shadow: var(--card-shadow); text-align: center; }
+    .camera-frame-wrapper {
+      position: relative; width: 100%; max-width: 560px; margin: 0 auto 1.5rem;
+      border-radius: 20px; overflow: hidden; background: #222; border: 5px solid var(--barbie-pink);
+      box-shadow: 0 10px 25px rgba(255, 20, 147, 0.3); min-height: 400px; display: flex; align-items: center; justify-content: center;
+    }
+    #webcam { width: 100%; height: 400px; object-fit: cover; display: block; transform: scaleX(-1); }
+    .camera-error-msg { color: #ff6b6b; padding: 1.5rem; font-weight: 600; display: none; }
+    
+    .booth-overlay-badge {
+      position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+      background: rgba(255, 20, 147, 0.85); color: white; padding: 0.4rem 1.2rem;
+      border-radius: 50px; font-weight: 700; font-size: 0.9rem; z-index: 10; pointer-events: none;
+    }
+    .countdown-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+      font-size: 5rem; color: white; font-weight: 800; font-family: 'Playfair Display', serif;
+      z-index: 20; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .countdown-overlay.active { opacity: 1; }
+
+    .booth-controls { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+    .frame-select { padding: 0.6rem 1.2rem; border-radius: 50px; border: 2px solid var(--barbie-pink); background: white; color: var(--barbie-dark); font-weight: 600; cursor: pointer; }
+
+    .captured-strips { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .strip-card { background: white; padding: 0.8rem 0.8rem 1.5rem 0.8rem; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); border: 2px solid var(--barbie-light-pink); }
+    .strip-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 0.8rem; }
+
+    /* Letter styling */
+    .letter-container { max-width: 750px; margin: 0 auto; background: white; padding: 3rem; border-radius: 25px; box-shadow: var(--card-shadow); border: 3px solid var(--barbie-light-pink); }
+    .envelope-cover { text-align: center; padding: 3rem 1rem; background: var(--barbie-soft-pink); border-radius: 18px; border: 2px dashed var(--barbie-pink); cursor: pointer; }
+    .envelope-cover i { font-size: 4rem; color: var(--barbie-pink); margin-bottom: 1rem; }
+    .letter-content { display: none; }
+    .letter-content.open { display: block; animation: fadeIn 0.8s ease; }
+    .letter-body { font-family: 'Playfair Display', serif; font-size: 1.2rem; line-height: 1.9; color: #333; white-space: pre-wrap; outline: none; padding: 1rem; border-radius: 12px; }
+    .letter-body[contenteditable="true"] { background: #fff0f5; border: 1px dashed var(--barbie-pink); }
+    .letter-actions { margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+
+    footer { text-align: center; padding: 2rem; color: #888; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <canvas id="sprinkle-canvas"></canvas>
+
+  <header>
+    <div class="brand">Mum's 44th Birthday 💖</div>
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('home')"><i class="fa-solid fa-house"></i> Home</button>
+      <button class="tab-btn" onclick="switchTab('photobooth')"><i class="fa-solid fa-camera-retro"></i> Photobooth</button>
+      <button class="tab-btn" onclick="switchTab('letter')"><i class="fa-solid fa-envelope"></i> Letter</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    
+    <!-- HOME TAB -->
+    <div id="home-tab" class="tab-content active">
+      <section class="hero">
+        <span class="hero-badge">44 & Fabulous Edition</span>
+        <h1>Happy 44th Birthday, Mum!</h1>
+        <p>To the queen of our hearts, the prettiest Barbie, and the best mom in the whole world!</p>
+
+        <div class="bouquet-wrapper" onclick="triggerPhotoShower()">
+          <svg class="bouquet-svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="35" r="22" fill="#ff69b4"/>
+            <circle cx="35" cy="45" r="18" fill="#ff1493"/>
+            <circle cx="65" cy="45" r="18" fill="#ffb6c1"/>
+            <circle cx="50" cy="55" r="16" fill="#e0007b"/>
+            <circle cx="50" cy="35" r="6" fill="#ffd700"/>
+            <circle cx="35" cy="45" r="5" fill="#ffd700"/>
+            <circle cx="65" cy="45" r="5" fill="#ffd700"/>
+            <circle cx="50" cy="55" r="4" fill="#ffd700"/>
+            <path d="M45,65 L35,90 M55,65 L65,90" stroke="#32cd32" stroke-width="4"/>
+            <path d="M40,68 C45,60 55,60 60,68 C55,75 45,75 40,68 Z" fill="#ff007f"/>
+          </svg>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Barbie Girl ➔ Barbie Queen</h2>
+        <div class="comparison-container">
+          <div class="comparison-slider" id="slider">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800" class="comparison-img" alt="Version Now" id="main-img">
+            <div class="comparison-img img-overlay" id="overlay">
+              <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800" class="comparison-img" style="width:750px; max-width:none;" alt="Childhood" id="overlay-img">
+            </div>
+            <div class="slider-handle" id="handle">
+              <div class="slider-button"><i class="fa-solid fa-arrows-left-right"></i></div>
+            </div>
+          </div>
+          <div class="upload-controls">
+            <label class="btn-secondary">Upload Childhood Pic <input type="file" hidden accept="image/*" onchange="loadCustomImg(event, 'overlay-img')"></label>
+            <label class="btn-secondary">Upload Version Now <input type="file" hidden accept="image/*" onchange="loadCustomImg(event, 'main-img')"></label>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- PHOTOBOOTH TAB -->
+    <div id="photobooth-tab" class="tab-content">
+      <div class="photobooth-container">
+        <h2 class="section-title">Barbie Birthday Photobooth 📸</h2>
+        <p style="color:#666; margin-bottom:1.5rem;">Strike a pose, pick your favorite frame, and capture your birthday memories!</p>
+
+        <div class="camera-frame-wrapper">
+          <div class="booth-overlay-badge" id="frame-badge">✨ Barbie Girl 44 ✨</div>
+          <div class="countdown-overlay" id="countdown">3</div>
+          <video id="webcam" autoplay playsinline muted></video>
+          <div id="camera-error" class="camera-error-msg">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 2rem; margin-bottom: 0.5rem;"></i><br>
+            Camera access was blocked or is unavailable. Please make sure you are accessing this site via a secure connection (HTTPS) and allow camera permissions in your browser bar.
+          </div>
+        </div>
+
+        <div class="booth-controls">
+          <select class="frame-select" id="frame-picker" onchange="changeFrame(this.value)">
+            <option value="✨ Barbie Girl 44 ✨">Frame: Barbie Girl 44</option>
+            <option value="👑 44 & Fabulous Queen 👑">Frame: 44 & Fabulous Queen</option>
+            <option value="💖 Best Mum in the World 💖">Frame: Best Mum Ever</option>
+          </select>
+          <button class="btn-primary" onclick="startPhotoCountdown()"><i class="fa-solid fa-camera"></i> Snap Photo!</button>
+        </div>
+
+        <h3 style="font-family:'Playfair Display', serif; margin-top:2rem; color:var(--barbie-dark);">Your Photo Strips</h3>
+        <div class="captured-strips" id="strip-container">
+          <p style="grid-column: 1/-1; color:#888; font-style:italic;" id="no-photos-msg">No photos captured yet. Hit snap above!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- LETTER TAB -->
+    <div id="letter-tab" class="tab-content">
+      <div class="letter-container">
+        <div class="envelope-cover" id="envelope" onclick="openLetter()">
+          <i class="fa-solid fa-heart"></i>
+          <h2 style="color:var(--barbie-pink); font-family:'Playfair Display', serif;">To My Dearest Mum</h2>
+          <p style="color:#666; margin-top:0.5rem;">Click to open your special birthday letter</p>
+        </div>
+
+        <div class="letter-content" id="letter-body-wrapper">
+          <h2 style="font-family:'Dancing Script', cursive; color:var(--barbie-hot-pink); font-size:2.5rem; margin-bottom:1rem;">Dearest Mum,</h2>
+          <div class="letter-body" id="letter-text" contenteditable="false">Happy 44th Birthday! 🎉
+
+Words will never be enough to express how much you mean to me. Thank you for all the endless love, late-night chats, boundless warm hugs, and every small thing you do for our family day in and day out.
+
+You are not just my mum; you are my biggest hero, my best friend, and the brightest spark in my life. Seeing your smile makes everything better. 
+
+I hope your 44th year brings you endless joy, peace, health, laughter, and all the love you so richly deserve.
+
+Happy Birthday Queen! 💖✨</div>
+
+          <div class="letter-actions">
+            <button class="btn-secondary" id="edit-btn" onclick="toggleEditLetter()"><i class="fa-solid fa-pen"></i> Edit Letter</button>
+            <span id="save-status" style="font-size:0.85rem; color:#888;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    Made with 💕 for Mum's 44th Birthday
+  </footer>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      if(tab === 'home') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('home-tab').classList.add('active');
+        stopCamera();
+      } else if(tab === 'photobooth') {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('photobooth-tab').classList.add('active');
+        initCamera();
+      } else {
+        document.querySelectorAll('.tab-btn')[2].classList.add('active');
+        document.getElementById('letter-tab').classList.add('active');
+        stopCamera();
+      }
+    }
+
+    let videoStream = null;
+    const videoElement = document.getElementById('webcam');
+    const errorElement = document.getElementById('camera-error');
+
+    async function initCamera() {
+      try {
+        errorElement.style.display = 'none';
+        videoElement.style.display = 'block';
+        if (!videoStream && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          videoStream = await navigator.mediaDevices.getUserMedia({ 
+            video: { width: { ideal: 1280 }, height: { ideal: 720 } }, 
+            audio: false 
+          });
+          videoElement.srcObject = videoStream;
+        } else if (!navigator.mediaDevices) {
+          throw new Error("MediaDevices API not supported.");
+        }
+      } catch (err) {
+        console.warn("Webcam access error:", err);
+        videoElement.style.display = 'none';
+        errorElement.style.display = 'block';
+      }
+    }
+
+    function stopCamera() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null;
+      }
+    }
+
+    function changeFrame(val) {
+      document.getElementById('frame-badge').textContent = val;
+    }
+
+    function startPhotoCountdown() {
+      const overlay = document.getElementById('countdown');
+      let count = 3;
+      overlay.textContent = count;
+      overlay.classList.add('active');
+
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          overlay.textContent = count;
+        } else {
+          clearInterval(timer);
+          overlay.classList.remove('active');
+          takeSnapshot();
+        }
+      }, 1000);
+    }
+
+    function takeSnapshot() {
+      if (!videoStream) {
+        alert("Camera is not active! Please allow camera permissions.");
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = videoElement.videoWidth || 640;
+      canvas.height = videoElement.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/png');
+      addPhotoStrip(dataUrl);
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
+      }
+    }
+
+    function addPhotoStrip(url) {
+      const container = document.getElementById('strip-container');
+      const noMsg = document.getElementById('no-photos-msg');
+      if (noMsg) noMsg.style.display = 'none';
+
+      const badgeText = document.getElementById('frame-badge').textContent;
+      const card = document.createElement('div');
+      card.className = 'strip-card';
+      card.innerHTML = `
+        <img src="${url}" class="strip-img" alt="Captured Photo">
+        <p style="font-family:'Dancing Script', cursive; font-size:1.1rem; color:var(--barbie-pink); margin-bottom:0.5rem;">${badgeText}</p>
+        <a href="${url}" download="Mum-Barbie-Photo.png" class="btn-secondary" style="display:block; text-align:center; text-decoration:none; font-size:0.85rem; padding:0.4rem;">Download</a>
+      `;
+      container.prepend(card);
+    }
+
+    function triggerPhotoShower() {
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 80, spread: 100, origin: { y: 0.6 }, colors: ['#ff1493', '#ffb6c1', '#ffd700', '#ffffff'] });
+      }
+    }
+
+    const slider = document.getElementById('slider');
+    const overlay = document.getElementById('overlay');
+    const handle = document.getElementById('handle');
+    let isDragging = false;
+
+    if(slider) {
+      const move = (e) => {
+        if(!isDragging) return;
+        const rect = slider.getBoundingClientRect();
+        let x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        if(x < 0) x = 0; if(x > rect.width) x = rect.width;
+        const percent = (x / rect.width) * 100;
+        overlay.style.width = percent + '%';
+        handle.style.left = percent + '%';
+      };
+      slider.addEventListener('mousedown', () => isDragging = true);
+      window.addEventListener('mouseup', () => isDragging = false);
+      slider.addEventListener('mousemove', move);
+      slider.addEventListener('touchstart', () => isDragging = true);
+      window.addEventListener('touchend', () => isDragging = false);
+      slider.addEventListener('touchmove', move);
+    }
+
+    function loadCustomImg(event, imgId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) { document.getElementById(imgId).src = e.target.result; }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function openLetter() {
+      document.getElementById('envelope').style.display = 'none';
+      document.getElementById('letter-body-wrapper').classList.add('open');
+      const savedLetter = localStorage.getItem('mum_birthday_letter');
+      if(savedLetter) { document.getElementById('letter-text').innerText = savedLetter; }
+    }
+
+    function toggleEditLetter() {
+      const text = document.getElementById('letter-text');
+      const btn = document.getElementById('edit-btn');
+      const status = document.getElementById('save-status');
+
+      if(text.contentEditable === "true") {
+        text.contentEditable = "false";
+        btn.innerHTML = '<i class="fa-solid fa-pen"></i> Edit Letter';
+        localStorage.setItem('mum_birthday_letter', text.innerText);
+        status.textContent = "Saved to browser!";
+        setTimeout(() => status.textContent = "", 2500);
+      } else {
+        text.contentEditable = "true";
+        text.focus();
+        btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Letter';
+      }
+    }
+  </script>
+</body>
+</html>
