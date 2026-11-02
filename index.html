@@ -324,20 +324,24 @@ Happy Birthday Queen! 💖✨</div>
         errorElement.style.display = 'none';
         videoElement.style.display = 'block';
         
-        // Simplified request that works on any laptop webcam
-        videoStream = await navigator.mediaDevices.getUserMedia({ 
-          video: true, 
-          audio: false 
-        });
+        // Try standard video first
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         videoElement.srcObject = videoStream;
         await videoElement.play();
-      } catch (err) {
-        console.warn("Webcam access error:", err);
-        videoElement.style.display = 'none';
-        errorElement.style.display = 'block';
+      } catch (err1) {
+        console.warn("Primary camera request failed, trying fallback:", err1);
+        try {
+          // Fallback: request any available media device
+          videoStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: false });
+          videoElement.srcObject = videoStream;
+          await videoElement.play();
+        } catch (err2) {
+          console.error("All webcam attempts failed:", err2);
+          videoElement.style.display = 'none';
+          errorElement.style.display = 'block';
+        }
       }
     }
-
     function stopCamera() {
       if (videoStream) {
         videoStream.getTracks().forEach(track => track.stop());
