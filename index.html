@@ -319,21 +319,18 @@ Happy Birthday Queen! 💖✨</div>
     const videoElement = document.getElementById('webcam');
     const errorElement = document.getElementById('camera-error');
 
-    async function initCamera() {
+  async function initCamera() {
       try {
         errorElement.style.display = 'none';
         videoElement.style.display = 'block';
         
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-          videoStream = await navigator.mediaDevices.getUserMedia({ 
-            video: { width: { ideal: 1280 }, height: { ideal: 720 } }, 
-            audio: false 
-          });
-          videoElement.srcObject = videoStream;
-          await videoElement.play();
-        } else {
-          throw new Error("getUserMedia not supported");
-        }
+        // Simplified request that works on any laptop webcam
+        videoStream = await navigator.mediaDevices.getUserMedia({ 
+          video: true, 
+          audio: false 
+        });
+        videoElement.srcObject = videoStream;
+        await videoElement.play();
       } catch (err) {
         console.warn("Webcam access error:", err);
         videoElement.style.display = 'none';
