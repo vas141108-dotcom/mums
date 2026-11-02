@@ -319,29 +319,40 @@ Happy Birthday Queen! 💖✨</div>
     const videoElement = document.getElementById('webcam');
     const errorElement = document.getElementById('camera-error');
 
-  async function initCamera() {
+    async function initCamera() {
       try {
         errorElement.style.display = 'none';
         videoElement.style.display = 'block';
+
+        // 1. Request basic permission first to unlock device enumeration
+        const tempStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        tempStream.getTracks().forEach(track => track.stop());
+
+        // 2. Enumerate available video inputs to find a valid device ID
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+        if (videoDevices.length === 0) {
+          throw new Error("No video input devices found");
+        }
+
+        const selectedDeviceId = videoDevices[0].deviceId;
         
-        // Try standard video first
-        videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        videoStream = await navigator.mediaDevices.getUserMedia({ 
+          video: { deviceId: selectedDeviceId ? { exact: selectedDeviceId } : undefined }, 
+          audio: false 
+        });
+
         videoElement.srcObject = videoStream;
         await videoElement.play();
-      } catch (err1) {
-        console.warn("Primary camera request failed, trying fallback:", err1);
-        try {
-          // Fallback: request any available media device
-          videoStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 }, audio: false });
-          videoElement.srcObject = videoStream;
-          await videoElement.play();
-        } catch (err2) {
-          console.error("All webcam attempts failed:", err2);
-          videoElement.style.display = 'none';
-          errorElement.style.display = 'block';
-        }
+
+      } catch (err) {
+        console.warn("Camera initialization error:", err);
+        videoElement.style.display = 'none';
+        errorElement.style.display = 'block';
       }
     }
+
     function stopCamera() {
       if (videoStream) {
         videoStream.getTracks().forEach(track => track.stop());
