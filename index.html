@@ -31,4 +31,44 @@
     <div class="brand">Mum's 44th Birthday 💖</div>
     <nav class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('home')">Home</button>
-      <button class="
+      <button class="tab-btn" onclick="switchTab('photobooth')">Photobooth</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <div id="home-tab" class="tab-content active">
+      <h1 style="font-family:'Playfair Display',serif; font-size:3rem; color:#e0007b; margin-bottom:1rem;">Happy 44th Birthday, Mum!</h1>
+      <p style="font-size:1.2rem; color:#555;">Click the Photobooth tab above to take your photos!</p>
+    </div>
+
+    <!-- PHOTOPHOTOBOOTH -->
+    <div id="photobooth-tab" class="tab-content">
+      <div class="photobooth-box">
+        <h2 style="font-family:'Playfair Display',serif; color:#ff1493; margin-bottom:1rem;">Birthday Photobooth 📸</h2>
+        <div class="video-wrap">
+          <video id="webcam" autoplay playsinline muted></video>
+          <div id="cam-error" class="error-txt" style="display:none;">
+            Camera permission is required.<br><br>
+            <button class="btn-pink" onclick="initCamera()">Allow Camera Access</button>
+          </div>
+        </div>
+        <button class="btn-pink" onclick="takeSnapshot()">Snap Photo!</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      if(tab === 'home') {
+        document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        document.getElementById('home-tab').classList.add('active');
+        stopCamera();
+      } else {
+        document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        document.getElementById('photobooth-tab').classList.add('active');
+        initCamera();
+      }
+    }
